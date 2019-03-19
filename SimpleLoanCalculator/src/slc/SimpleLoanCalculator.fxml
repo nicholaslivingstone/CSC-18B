@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="slc.SimpleLoanCalculatorController">
+    <children>
+      <GridPane layoutX="25.0" layoutY="54.0" prefHeight="120.0" prefWidth="257.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="143.0" minWidth="6.0" prefWidth="143.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="257.0" minWidth="10.0" prefWidth="120.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+              <Label fx:id="amount_label" alignment="CENTER_RIGHT" focusTraversable="false" minHeight="16" minWidth="46.0" prefHeight="17.0" prefWidth="46.0" text="Amount" />
+            <Label fx:id="interest_label" focusTraversable="false" prefHeight="17.0" prefWidth="88.0" text="Interest: " GridPane.rowIndex="1" />
+            <Label fx:id="terms_label" alignment="CENTER_RIGHT" focusTraversable="false" text="Terms" GridPane.rowIndex="2" />
+            <Label fx:id="payments_label" alignment="CENTER_RIGHT" focusTraversable="false" text="Payments" GridPane.rowIndex="3" />
+            <TextField fx:id="amount_text_field" promptText="\$00.00" GridPane.columnIndex="1" />
+            <Slider fx:id="interest_slider" blockIncrement="0.05" majorTickUnit="7.0" max="30.0" min="2.0" showTickMarks="true" value="16.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ChoiceBox fx:id="terms_selection" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="Payments_Text_Field" editable="false" focusTraversable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+    </children>
+</AnchorPane>

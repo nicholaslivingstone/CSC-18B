@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="SimpleLoanCalculator.jnlp">
+  <information>
+    <title>SimpleLoanCalculator</title>
+    <vendor>freez</vendor>
+    <description>null</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="SimpleLoanCalculator.jar" size="3032" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="800" height="600" main-class="slc.SimpleLoanCalculator"  name="SimpleLoanCalculator" />
+  <update check="always"/>
+</jnlp>
