@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="carsdatabase.FXMLDocumentController">
+   <children>
+      <VBox alignment="CENTER" fillWidth="false" layoutX="71.0" layoutY="72.0" prefHeight="400.0" prefWidth="300.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="36.0" prefWidth="285.0" spacing="10.0">
+               <children>
+                  <Button fx:id="prevBttn" mnemonicParsing="false" onAction="#prevPress" text="Previous" />
+                  <TextField fx:id="currentIndexTF" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="25.0" />
+                  <Label focusTraversable="false" text="of" />
+                  <TextField fx:id="totalIndexTF" editable="false" focusTraversable="false" prefHeight="25.0" prefWidth="25.0" />
+                  <Button fx:id="nextBttn" mnemonicParsing="false" onAction="#nextPress" text="Next" />
+               </children>
+            </HBox>
+            <GridPane alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="80.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="120.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label focusTraversable="false" text="Car ID:" />
+                  <Label focusTraversable="false" text="Car Make:" GridPane.rowIndex="1" />
+                  <Label focusTraversable="false" text="Car Model:" GridPane.rowIndex="2" />
+                  <Label focusTraversable="false" text="Car Year:" GridPane.rowIndex="3" />
+                  <Label focusTraversable="false" text="Car Mileage:" GridPane.rowIndex="4" />
+                  <TextField fx:id="IDTF" disable="true" editable="false" GridPane.columnIndex="1" />
+                  <TextField fx:id="makeTF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="modelTF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="yearTF" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="mlgTF" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               </children>
+            </GridPane>
+            <TitledPane animated="false" collapsible="false" focusTraversable="false" prefHeight="71.0" prefWidth="248.0" text="Find an entry by car model">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="217.0">
+                     <children>
+                        <HBox alignment="CENTER" fillHeight="false" prefHeight="45.0" prefWidth="217.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label focusTraversable="false" text="Car Model:" />
+                              <TextField fx:id="modelSearchTF" prefHeight="25.0" prefWidth="101.0" />
+                              <Button fx:id="findBttn" mnemonicParsing="false" onAction="#findPress" text="Find" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+            <HBox alignment="CENTER" prefHeight="33.0" prefWidth="258.0" spacing="10.0">
+               <children>
+                  <Button fx:id="browseBttn" mnemonicParsing="false" onAction="#browsePress" text="Browse all Entries" />
+                  <Button fx:id="insertBttn" mnemonicParsing="false" onAction="#insertPress" text="Insert New Entry" />
+               </children>
+            </HBox>
+            <Button fx:id="deleteBttn" mnemonicParsing="false" onAction="#deletePress" text="Delete Current Entry" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
