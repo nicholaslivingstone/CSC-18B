@@ -15,10 +15,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import java.util.List;
 import java.util.Optional;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.*;
 import javafx.scene.control.ButtonType;
-import java.lang.String;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  *
@@ -56,11 +65,16 @@ public class FXMLDocumentController implements Initializable {
     private Button deleteBttn;
     
     CarQueries carQ = new CarQueries();    //databse query object
-    List<Car> carList = new ArrayList<Car>();
+    List<Car> carList = new ArrayList<>();
     int carCount = 0,
             currentIndex = 1;
+    
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         carCount = carQ.getRowCount(); 
         totalIndexTF.setText(Integer.toString(carCount));
         if(carCount == 0){
@@ -75,6 +89,8 @@ public class FXMLDocumentController implements Initializable {
         }
         fillFields(carList.get(currentIndex - 1));
     }    
+    
+    
 
     @FXML
     private void prevPress(ActionEvent event) {
@@ -125,7 +141,61 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void browsePress(ActionEvent event) {
+        TableView<Car> table = new TableView<Car>();    //make new table view
+        
+        //create table columns
+        TableColumn<Car, Integer> IDColumn = new TableColumn<>("Car ID");
+        TableColumn<Car, String> makeColumn = new TableColumn<>("Make");
+        TableColumn<Car, String> modelColumn = new TableColumn<>("Model");
+        TableColumn<Car, String> yearColumn = new TableColumn<>("Year");
+        TableColumn<Car, Integer> mileageColumn = new TableColumn<>("Mileage");
+        
+        //fix the width of the columns to the size of the window
+        IDColumn.prefWidthProperty().bind(table.widthProperty().multiply(.19));
+        makeColumn.prefWidthProperty().bind(table.widthProperty().divide(5));
+        modelColumn.prefWidthProperty().bind(table.widthProperty().divide(5));
+        yearColumn.prefWidthProperty().bind(table.widthProperty().divide(5));
+        mileageColumn.prefWidthProperty().bind(table.widthProperty().divide(5));
+        
+        ObservableList<Car> obsCarList = FXCollections.observableArrayList(carList);    //cast dynamic list to observable list
+        
+        //define data to be pulled to each column
+        IDColumn.setCellValueFactory(new PropertyValueFactory<>("CarID"));
+        makeColumn.setCellValueFactory(new PropertyValueFactory<>("CarMake"));
+        modelColumn.setCellValueFactory(new PropertyValueFactory<>("CarModel"));
+        yearColumn.setCellValueFactory(new PropertyValueFactory<>("CarYear"));
+        mileageColumn.setCellValueFactory(new PropertyValueFactory<>("CarMileage"));
+        
+        table.getColumns().addAll(IDColumn, makeColumn, modelColumn, yearColumn, mileageColumn);//add columns to the table
+        table.setItems(obsCarList); //fill data with table
+        
+        Button refresh = new Button("Refresh");
+        //setup the stage and scene
+        VBox root = new VBox(table, refresh);
+        table.prefHeightProperty().bind(root.heightProperty());
+        refresh.prefHeight(10);
+        refresh.prefWidthProperty().bind(root.widthProperty());
+        
+        EventHandler<ActionEvent> refreshPress = new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event){
+                obsCarList.clear();
+                obsCarList.addAll(carList);
+                table.setItems(obsCarList);
+            }
+        };
+        
+        refresh.setOnAction(refreshPress);
+        
+        
+        Stage stage = new Stage();
+        stage.setTitle("Browse All Entries");
+        Scene scene = new Scene(root, 400, 300);
+        stage.setScene(scene);
+        stage.show();   //show the scene
     }
+    
+    
 
     @FXML
     private void insertPress(ActionEvent event) {
