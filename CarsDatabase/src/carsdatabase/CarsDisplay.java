@@ -25,6 +25,7 @@ public class CarsDisplay extends Application {
         
         stage.setScene(scene);
         stage.setTitle("Cars");
+        stage.setResizable(false);
         stage.show();
     }
 

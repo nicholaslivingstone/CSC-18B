@@ -33,6 +33,7 @@ import javafx.stage.Stage;
  *
  * @author freez
  */
+@SuppressWarnings("unchecked")
 public class FXMLDocumentController implements Initializable {
     
     @FXML
@@ -78,6 +79,7 @@ public class FXMLDocumentController implements Initializable {
         carCount = carQ.getRowCount(); 
         totalIndexTF.setText(Integer.toString(carCount));
         if(carCount == 0){
+            setDisableButtons(true);
             currentIndexTF.setText("0"); 
             Alert alert = new Alert(AlertType.INFORMATION, "The database is empty, you should add something!", ButtonType.CLOSE);
             alert.showAndWait();
@@ -138,7 +140,6 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
         }
     }
-
     @FXML
     private void browsePress(ActionEvent event) {
         TableView<Car> table = new TableView<Car>();    //make new table view
@@ -169,11 +170,20 @@ public class FXMLDocumentController implements Initializable {
         table.getColumns().addAll(IDColumn, makeColumn, modelColumn, yearColumn, mileageColumn);//add columns to the table
         table.setItems(obsCarList); //fill data with table
         
-        Button refresh = new Button("Refresh");
+        //make button
+        Button refresh = new Button("");
+        Image refIcon = new Image(getClass().getResourceAsStream("refreshIcon.png"));
+        ImageView imgView = new ImageView(refIcon);
+        imgView.setSmooth(false);
+        refresh.setGraphic(imgView);
+        
+        
         //setup the stage and scene
         VBox root = new VBox(table, refresh);
+        root.setMinWidth(400);
+        root.setMaxHeight(400);
         table.prefHeightProperty().bind(root.heightProperty());
-        refresh.prefHeight(10);
+        refresh.prefHeight(26);
         refresh.prefWidthProperty().bind(root.widthProperty());
         
         EventHandler<ActionEvent> refreshPress = new EventHandler<ActionEvent>(){
@@ -192,6 +202,8 @@ public class FXMLDocumentController implements Initializable {
         stage.setTitle("Browse All Entries");
         Scene scene = new Scene(root, 400, 300);
         stage.setScene(scene);
+        stage.setMinWidth(400);
+        stage.setMaxWidth(400);
         stage.show();   //show the scene
     }
     
@@ -200,10 +212,24 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void insertPress(ActionEvent event) {
         //get data from fields
+        
+        
+        if(makeTF.getText().isEmpty() || modelTF.getText().isEmpty() || yearTF.getText().isEmpty() || mlgTF.getText().isEmpty()){
+            Alert issue = new Alert(AlertType.ERROR, "Check your fields, somethings missing...", ButtonType.CLOSE);
+            issue.showAndWait();
+            return; 
+        }
+        
+        if(carCount == 0){
+            setDisableButtons(false);
+        }
+        
         String make = makeTF.getText().trim();
         String model = modelTF.getText().trim();
         String year = yearTF.getText().trim();
         int mileage = Integer.valueOf(mlgTF.getText());
+        
+        
         
         int ID = carQ.addCar(make, model, year, mileage);   //add car to the database, returns newly created car ID
         carList.add(new Car(ID, make, model, year, mileage));   //add car to vector array
@@ -237,6 +263,7 @@ public class FXMLDocumentController implements Initializable {
                     mlgTF.clear(); 
                     currentIndexTF.setText("0");
                     totalIndexTF.setText("0");
+                    setDisableButtons(true);
                 }
                 else
                     updateFields();
@@ -267,5 +294,13 @@ public class FXMLDocumentController implements Initializable {
         fillFields(carList.get(currentIndex - 1));
         modelSearchTF.clear();
         prevBttn.requestFocus();
+    }
+    
+    private void setDisableButtons(boolean _disable){
+        prevBttn.setDisable(_disable);
+        nextBttn.setDisable(_disable);
+        findBttn.setDisable(_disable);
+        browseBttn.setDisable(_disable);
+        deleteBttn.setDisable(_disable);
     }
 }
