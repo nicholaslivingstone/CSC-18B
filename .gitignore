@@ -1,3 +1,22 @@
+<<<<<<< HEAD
 /CarsDatabase/nbproject/private/
 /CarsDatabase/dist/
 /CarsDatabase/build/
+/BinaryCalculator/nbproject/private/
+/BinaryCalculator/dist/
+/BinaryCalculator/build/
+/Calculator/nbproject/private/
+/SimpleCalculator/nbproject/private/
+/SimpleCalculator/build/
+=======
+/CarsDatabase/nbproject/private/
+/CarsDatabase/dist/
+/CarsDatabase/build/
+/BinaryCalculator/nbproject/private/
+/BinaryCalculator/dist/
+/BinaryCalculator/build/
+/Calculator/nbproject/private/
+/SimpleCalculator/nbproject/private/
+/SimpleCalculator/build/
+>>>>>>> 849669344663504afdfec92dbb6312b2e02de94d
+/SimpleCalculator/dist/
