@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -36,3 +37,43 @@ public class BinaryCalculator extends Application {
     }
     
 }
+=======
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package binarycalculator;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author freez
+ */
+public class BinaryCalculator extends Application {
+    
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("BinCalcFXML.fxml"));
+        Scene scene = new Scene(root);
+        
+        stage.setScene(scene);
+        stage.setTitle("Integer Calculator with Conversions");
+        stage.show();
+        
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+}
+>>>>>>> 849669344663504afdfec92dbb6312b2e02de94d

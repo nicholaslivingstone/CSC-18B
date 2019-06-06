@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -8,8 +9,11 @@ package simplecalculator;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
+import java.util.function.Consumer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +27,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.regex.*;
+import java.lang.String;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author freez
@@ -78,7 +88,7 @@ public class FXMLDocumentController implements Initializable {
     //class variables
     double temp, result; 
     String currentNum = "",
-            formula;
+            formula = "";
     Operation currentOp;
     boolean opPressed; 
     @FXML
@@ -91,8 +101,6 @@ public class FXMLDocumentController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        
         anchor.setOnKeyPressed((KeyEvent ev) -> {   //listerner for all relevant keys
             switch(ev.getCode()){
                 case DIGIT0:
@@ -146,6 +154,10 @@ public class FXMLDocumentController implements Initializable {
                     break;
             }
         });
+    }
+    
+    void initData(String _formula) {
+        updateDisplay(_formula);
     }
 
     //NUMBER BUTTONS
@@ -384,7 +396,7 @@ public class FXMLDocumentController implements Initializable {
     }
 
     //OVERLOADED update display using string
-    public void updateDisplay(String _num){
+    private void updateDisplay(String _num){
         display.setText(_num);
     }
     
@@ -445,22 +457,137 @@ public class FXMLDocumentController implements Initializable {
     }
 
     @FXML
-    private void formulaPressed(ActionEvent event) {
-        
-        try{
+    private void formulaPressed(ActionEvent event) throws IOException {
             FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/simplecalculator/FormulaInputFXML.fxml"));
             Stage formStage = new Stage(); 
             Parent root1 = (Parent) fxmlLoader.load();
             formStage.setTitle("Formula Input");
             formStage.setScene(new Scene(root1));
+            Consumer<String> onComplete = result -> {   //consumer to activate when user enters formula in popup dialog
+                formula = result; 
+                updateDisplay(calcFormula(formula));
+            };
+            FormulaInputFXMLController controller = fxmlLoader.<FormulaInputFXMLController>getController();
+            controller.initData(onComplete);
             formStage.show();
-        }catch(IOException e){
+    }
+    
+    private String calcFormula(String formula){
+        String[] rpn = null; 
+        List<String> list = new ArrayList<String>();
+        
+        //obtain each element of formula by regex
+        try{
+            Pattern regex = Pattern.compile("(\\(\\-\\d*\\))|-|\\*|\\)|\\/|\\(|\\+|\\d*?\\S");  //regex pattern
+            Matcher m = regex.matcher(formula);
+            while(m.find()){
+                list.add(m.group());
+            }
+        } catch(java.util.regex.PatternSyntaxException e){  //catch syntax error of regex expression
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Uh oh, something happened!\n"
+                    + "Check your regex syntax.");
+            alert.showAndWait();    //display error message
+        }
+        
+        String[] tempArr = list.toArray(new String[list.size()]);
+        
+        
+        try{
+            rpn = convertInfixToRPN(tempArr);
+        }catch(IllegalArgumentException e){
             e.printStackTrace();
+            return "Syntax Error";
+        }
+        
+        
+        int value = 0; 
+        
+        String ops = "+-*/";
+        Stack<String> formStack = new Stack<String>();
+        for(String item : rpn){
+            if(!ops.contains(item))
+                formStack.push(item);
+            else{
+                double a = Double.valueOf(formStack.pop());
+                double b = Double.valueOf(formStack.pop());
+                switch(item){
+                    case "+":
+                        formStack.push(String.valueOf(a + b));
+                        break;
+                    case "-":
+                        formStack.push(String.valueOf(b - a));
+                        break;
+                    case "*":
+                        formStack.push(String.valueOf(a * b));
+                        break;
+                    case "/":
+                        formStack.push(String.valueOf(b / a));
+                }
+            }
+        }
+        String resultStr = formStack.pop(); 
+        result = Double.valueOf(resultStr);
+        return resultStr; 
+    }
+    
+    private static boolean isNumber(String str) {
+        try{
+            Double.valueOf(str);
+            return true;
+        } catch(Exception e){
+            return false;
         }
     }
-
-    public void returnFormula(String _formula) {
-       this.formula = _formula;
-        updateDisplay(this.formula);
+    
+     String[] convertInfixToRPN(String[] _formula) {
+        Map<String, Integer> prededence = new HashMap<>();
+        prededence.put("/", 5);
+        prededence.put("*", 5);
+        prededence.put("+", 4);
+        prededence.put("-", 4);
+        prededence.put("(", 0);
+        
+        Queue<String> Q = new LinkedList<>();
+        Stack<String> S = new Stack<>();
+        
+        
+        
+        for(String item : _formula){
+            
+            if("(".equals(item)){
+                S.push(item);
+                continue; 
+            }
+            if(")".equals(item)){
+                while(!"(".equals(S.peek()))
+                    Q.add(S.pop());
+                S.pop();
+                continue; 
+            }
+            if (prededence.containsKey(item)) {
+                while (!S.empty() && prededence.get(item) <= prededence.get(S.peek())) {
+                    Q.add(S.pop());
+                }
+                S.push(item);
+                continue;
+            }
+            if(isNumber(item)){
+                Q.add(item);
+                continue; 
+            }
+            
+            throw new IllegalArgumentException("Invalid input");
+        }
+        
+        while (!S.isEmpty()) {
+            Q.add(S.pop());
+        }
+        
+        List<String> list = new ArrayList<String>(Q);
+        String[] arr = new String[Q.size()];
+        arr = list.toArray(arr);
+        return arr; 
     }
 }
+    
+    
