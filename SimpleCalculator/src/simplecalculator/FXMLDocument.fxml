@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="295.0" prefWidth="225.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplecalculator.FXMLDocumentController">
+   <children>
+      <GridPane alignment="CENTER" layoutY="175.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="225.0" AnchorPane.topAnchor="70.0">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="clearBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#clearPress" prefHeight="45.0" prefWidth="55.0" text="C" textAlignment="CENTER">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="signBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#signPress" prefHeight="45.0" prefWidth="55.0" text="+/−" textAlignment="CENTER" textOverrun="CLIP" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="percentBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#percentPress" prefHeight="45.0" prefWidth="55.0" text="\%" textAlignment="CENTER" GridPane.columnIndex="2">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="divBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#divPress" prefHeight="45.0" prefWidth="55.0" text="÷" textAlignment="CENTER" GridPane.columnIndex="3">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="seven" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press7" prefHeight="45.0" prefWidth="55.0" text="7" textAlignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="eight" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press8" prefHeight="45.0" prefWidth="55.0" text="8" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="nine" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press9" prefHeight="45.0" prefWidth="55.0" text="9" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="multBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#multPress" prefHeight="45.0" prefWidth="55.0" text="X" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="four" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press4" prefHeight="45.0" prefWidth="55.0" text="4" textAlignment="CENTER" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="five" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press5" prefHeight="45.0" prefWidth="55.0" text="5" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="six" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press6" prefHeight="45.0" prefWidth="55.0" text="6" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="subBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#subPress" prefHeight="45.0" prefWidth="55.0" text="−" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="one" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press1" prefHeight="45.0" prefWidth="55.0" text="1" textAlignment="CENTER" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="two" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press2" prefHeight="45.0" prefWidth="55.0" text="2" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="three" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press3" prefHeight="45.0" prefWidth="55.0" text="3" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="addBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addPress" prefHeight="45.0" prefWidth="55.0" text="+" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="zero" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#press0" prefHeight="45.0" prefWidth="112.0" text="0" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="decimalPnt" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#decPress" prefHeight="45.0" prefWidth="55.0" text="." textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="equalBttn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#equalPress" prefHeight="45.0" prefWidth="55.0" text="=" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Verdana" size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </GridPane>
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="225.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Save equation to file" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Tools">
+            <items>
+                  <MenuItem fx:id="binaryMI" mnemonicParsing="false" onAction="#binPressed" text="Convert to Binary" />
+                  <MenuItem fx:id="hexMI" mnemonicParsing="false" onAction="#hexPressed" text="Convert to Hex" />
+                  <MenuItem fx:id="formulaMI" mnemonicParsing="false" onAction="#formulaPressed" text="Enter Formula" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem fx:id="aboutPress" mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TextField fx:id="display" layoutY="80.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="45.0" prefWidth="225.0" AnchorPane.topAnchor="25.0" />
+   </children>
+</AnchorPane>
