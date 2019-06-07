@@ -1,16 +1,10 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Nicholas Livingstone 2019
 package simplecalculator;
 
-
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -27,16 +21,22 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import java.util.Queue;
 import java.util.Stack;
 import java.util.regex.*;
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.List;
-/**
- *
- * @author freez
- */
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.control.TextInputDialog;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+
 public class FXMLDocumentController implements Initializable {
     
     //FXML Items
@@ -79,33 +79,38 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button equalBttn;
     @FXML
-    private MenuItem aboutPress;
-    @FXML
     private TextField display;
     @FXML
     private AnchorPane anchor; 
-    
-    //class variables
-    double temp, result; 
-    String currentNum = "",
-            formula = "";
-    Operation currentOp;
-    boolean opPressed; 
     @FXML
     private MenuItem binaryMI;
     @FXML
     private MenuItem hexMI;
     @FXML
     private MenuItem formulaMI;
+    @FXML
+    private MenuItem saveBttn;
+    @FXML
+    private MenuItem openBttn;
+    
+    //class variables
+    double temp, result; 
+    String currentNum = "",
+            formula = "";
+    Operation currentOp;
+    boolean opPressed;
+    private static ObjectOutputStream output;
+    private static ObjectInputStream input; 
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        anchor.setOnKeyPressed((KeyEvent ev) -> {   //listerner for all relevant keys
+        anchor.setOnKeyPressed((KeyEvent ev) -> {
+            //listerner for all relevant keys
             switch(ev.getCode()){
                 case DIGIT0:
                     zero.fire();
-                    break; 
+                    break;
                 case DIGIT1:
                     one.fire();
                     break;
@@ -125,7 +130,7 @@ public class FXMLDocumentController implements Initializable {
                     six.fire();
                     break;
                 case DIGIT7:
-                    seven.fire(); 
+                    seven.fire();
                     break;
                 case DIGIT8:
                     eight.fire();
@@ -151,15 +156,10 @@ public class FXMLDocumentController implements Initializable {
                     break;
                 case PERIOD:
                     decimalPnt.fire();
-                    break;
             }
         });
     }
     
-    void initData(String _formula) {
-        updateDisplay(_formula);
-    }
-
     //NUMBER BUTTONS
     @FXML
     private void press7(ActionEvent event) {
@@ -320,7 +320,6 @@ public class FXMLDocumentController implements Initializable {
     
     //MATH BUTTONS
     
-    
     //MULTIPLY
     @FXML
     private void multPress(ActionEvent event) {
@@ -436,6 +435,7 @@ public class FXMLDocumentController implements Initializable {
         stage.show();
     }
 
+    
     @FXML
     private void hexPressed(ActionEvent event) {
         if(display.getText().trim().isEmpty()){
@@ -463,8 +463,8 @@ public class FXMLDocumentController implements Initializable {
             Parent root1 = (Parent) fxmlLoader.load();
             formStage.setTitle("Formula Input");
             formStage.setScene(new Scene(root1));
-            Consumer<String> onComplete = result -> {   //consumer to activate when user enters formula in popup dialog
-                formula = result; 
+            Consumer<String> onComplete = _formula -> {   //consumer to activate when user enters formula in popup dialog
+                formula = _formula; 
                 updateDisplay(calcFormula(formula));
             };
             FormulaInputFXMLController controller = fxmlLoader.<FormulaInputFXMLController>getController();
@@ -472,61 +472,98 @@ public class FXMLDocumentController implements Initializable {
             formStage.show();
     }
     
+    @SuppressWarnings("CallToPrintStackTrace")
     private String calcFormula(String formula){
-        String[] rpn = null; 
-        List<String> list = new ArrayList<String>();
+        List<String> formulaElements = new ArrayList<>();   //formula elements located by regex
+        List<String> RPN = new ArrayList<>();               //list of converted polish notation        
+        Stack<String> S = new Stack<>();                    //Stack for conversion and calculations
+        String resultStr;                                   //string to store result
         
         //obtain each element of formula by regex
         try{
             Pattern regex = Pattern.compile("(\\(\\-\\d*\\))|-|\\*|\\)|\\/|\\(|\\+|\\d*?\\S");  //regex pattern
-            Matcher m = regex.matcher(formula);
+            Matcher m = regex.matcher(formula); //match pattern against the formula
             while(m.find()){
-                list.add(m.group());
+                formulaElements.add(m.group());
             }
-        } catch(java.util.regex.PatternSyntaxException e){  //catch syntax error of regex expression
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Uh oh, something happened!\n"
-                    + "Check your regex syntax.");
-            alert.showAndWait();    //display error message
+        }catch(java.util.regex.PatternSyntaxException e){  //catch syntax error of regex expression
+            e.printStackTrace();
         }
         
-        String[] tempArr = list.toArray(new String[list.size()]);
-        
-        
+        // convert the elements to reverse polish notation
         try{
-            rpn = convertInfixToRPN(tempArr);
+            //Prescendence of Operations
+            Map<String, Integer> prededence = new HashMap<>();
+            prededence.put("/", 5);
+            prededence.put("*", 5);
+            prededence.put("+", 4);
+            prededence.put("-", 4);
+            prededence.put("(", 0);
+                    
+            for(String item : formulaElements){
+                if("(".equals(item)){
+                    S.push(item);
+                    continue; 
+                }
+                if(")".equals(item)){
+                    while(!"(".equals(S.peek()))
+                        RPN.add(S.pop());
+                    S.pop();
+                    continue; 
+                }
+                if (prededence.containsKey(item)) {
+                    while (!S.empty() && prededence.get(item) <= prededence.get(S.peek())) {
+                        RPN.add(S.pop());
+                    }
+                    S.push(item);
+                    continue;
+                }
+                if(isNumber(item)){
+                    RPN.add(item);
+                    continue; 
+                }
+                throw new IllegalArgumentException("Invalid input");
+            }
+            while (!S.isEmpty()) {
+                RPN.add(S.pop());
+            }
         }catch(IllegalArgumentException e){
             e.printStackTrace();
             return "Syntax Error";
         }
         
-        
-        int value = 0; 
-        
-        String ops = "+-*/";
-        Stack<String> formStack = new Stack<String>();
-        for(String item : rpn){
-            if(!ops.contains(item))
-                formStack.push(item);
-            else{
-                double a = Double.valueOf(formStack.pop());
-                double b = Double.valueOf(formStack.pop());
-                switch(item){
-                    case "+":
-                        formStack.push(String.valueOf(a + b));
-                        break;
-                    case "-":
-                        formStack.push(String.valueOf(b - a));
-                        break;
-                    case "*":
-                        formStack.push(String.valueOf(a * b));
-                        break;
-                    case "/":
-                        formStack.push(String.valueOf(b / a));
+        //Complete calculation
+        String ops = "+-*/";    //stores operator symboles
+        try{
+            for(String item : RPN){
+                if(!ops.contains(item)) //if it's a number, push it onto the stack
+                    S.push(item);
+                else{
+                    double a = Double.valueOf(S.pop());
+                    double b = Double.valueOf(S.pop());
+                    switch(item){
+                        case "+":
+                            S.push(String.valueOf(a + b));
+                            break;
+                        case "-":
+                            S.push(String.valueOf(b - a));
+                            break;
+                        case "*":
+                            S.push(String.valueOf(a * b));
+                            break;
+                        case "/":
+                            S.push(String.valueOf(b / a));
+                    }
                 }
             }
-        }
-        String resultStr = formStack.pop(); 
+            
+        resultStr = S.pop(); 
         result = Double.valueOf(resultStr);
+        
+        }catch(Exception e){
+            e.printStackTrace();
+            return "Syntax Error";
+        }
         return resultStr; 
     }
     
@@ -538,55 +575,43 @@ public class FXMLDocumentController implements Initializable {
             return false;
         }
     }
-    
-     String[] convertInfixToRPN(String[] _formula) {
-        Map<String, Integer> prededence = new HashMap<>();
-        prededence.put("/", 5);
-        prededence.put("*", 5);
-        prededence.put("+", 4);
-        prededence.put("-", 4);
-        prededence.put("(", 0);
-        
-        Queue<String> Q = new LinkedList<>();
-        Stack<String> S = new Stack<>();
-        
-        
-        
-        for(String item : _formula){
-            
-            if("(".equals(item)){
-                S.push(item);
-                continue; 
-            }
-            if(")".equals(item)){
-                while(!"(".equals(S.peek()))
-                    Q.add(S.pop());
-                S.pop();
-                continue; 
-            }
-            if (prededence.containsKey(item)) {
-                while (!S.empty() && prededence.get(item) <= prededence.get(S.peek())) {
-                    Q.add(S.pop());
-                }
-                S.push(item);
-                continue;
-            }
-            if(isNumber(item)){
-                Q.add(item);
-                continue; 
-            }
-            
-            throw new IllegalArgumentException("Invalid input");
+
+    @FXML
+    private void savePressed(ActionEvent event) {
+        try {
+//            TextInputDialog dialog = new TextInputDialog("Enter the file name to save as");
+//            dialog.showAndWait();
+              JFileChooser saver = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+              int r = saver.showSaveDialog(null); 
+              if(r == JFileChooser.APPROVE_OPTION){
+                    output = new ObjectOutputStream(Files.newOutputStream(Paths.get(saver.getSelectedFile().getAbsolutePath())));
+                    output.writeObject(formula);
+                    output.close();
+              }
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error opening file");
+            alert.showAndWait();
         }
-        
-        while (!S.isEmpty()) {
-            Q.add(S.pop());
+    }
+
+    @FXML
+    private void openPressed(ActionEvent event) {
+        try {
+            JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            int choice = fileChooser.showOpenDialog(null);
+            if(choice == JFileChooser.APPROVE_OPTION){
+                input = new ObjectInputStream(Files.newInputStream(Paths.get(fileChooser.getSelectedFile().getAbsolutePath())));
+                formula = input.readObject().toString();
+                updateDisplay(calcFormula(formula));
+                input.close();
+            }
+        }catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error opening file");
+            alert.showAndWait();
+        }catch (ClassNotFoundException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        List<String> list = new ArrayList<String>(Q);
-        String[] arr = new String[Q.size()];
-        arr = list.toArray(arr);
-        return arr; 
     }
 }
     

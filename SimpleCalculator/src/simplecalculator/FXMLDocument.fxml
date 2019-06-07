@@ -129,7 +129,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Save equation to file" />
+              <MenuItem fx:id="saveBttn" mnemonicParsing="false" onAction="#savePressed" text="Save last equation to file" />
+                  <MenuItem fx:id="openBttn" mnemonicParsing="false" onAction="#openPressed" text="Open formula from file" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Tools">
@@ -137,11 +138,6 @@
                   <MenuItem fx:id="binaryMI" mnemonicParsing="false" onAction="#binPressed" text="Convert to Binary" />
                   <MenuItem fx:id="hexMI" mnemonicParsing="false" onAction="#hexPressed" text="Convert to Hex" />
                   <MenuItem fx:id="formulaMI" mnemonicParsing="false" onAction="#formulaPressed" text="Enter Formula" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem fx:id="aboutPress" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>
